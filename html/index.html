@@ -18,11 +18,15 @@
         <button type="button" onclick="sumarMatriz()">suma</button>
     </form>
     <div class="matrices">
-
+        
         <div class="matriz" id="matriz1">
         </div>
+        
         <div class="matriz" id="matriz2">
         </div>
+        <div class="matriz" id="resultado">
+        </div>
+
     </div>
 <style>
     
@@ -48,10 +52,14 @@
         }
 </style>
     <script>
-        const crearMatriz = () =>{
-        const filas = document.querySelector("#filasInput").value
-        const columnas = document.querySelector("#columnasInput").value
+        const crearMatriz = (matriz) =>{
+        const filas =  document.querySelector("#filasInput").value
+        const columnas =  document.querySelector("#columnasInput").value
         document.querySelectorAll(".matriz").forEach((el)=>{
+            if(el.id == "resultado"){
+                return
+            }
+            el.innerHTML = ""
             Array(parseInt(columnas)).fill(1).forEach(()=>{
                 const columna = document.createElement("div")
                 columna.className = "columna"
@@ -65,11 +73,32 @@
             })
         })
         }
-        const sumarMatriz = () =>{
-            const matrices = document.querySelectorAll(".matriz")
+         const graficarResultado = (matriz) =>{
+            const resultado = document.querySelector("#resultado")                        
+            resultado.innerHTML = ""
+            const columnas = matriz.length
+            const filas = matriz[0].length
+            console.log(columnas, filas)
+            Array(parseInt(columnas)).fill(1).forEach((e,cIndex)=>{
+                const columna = document.createElement("div")
+                columna.className = "columna"
+                Array(parseInt(filas)).fill(1).forEach((e,fIndex)=>{
+                    const inputBox = document.createElement("input")
+                    inputBox.type = "number"
+                    inputBox.className = "valor"
+                    inputBox.readOnly = true
+                    inputBox.value = matriz[cIndex][fIndex]
+                    columna.appendChild(inputBox)
+                })
+                resultado.appendChild(columna)
+            })
+        }
 
+        const sumarMatriz = () =>{
+            const matrices = Array.from(document.querySelectorAll(".matriz")).map((matriz)=> matriz.id == "resultado" ? false : matriz).filter(Boolean)
+            console.log("acá",matrices)
             const matricesArray = Array.from(matrices).map((matriz,index)=>(Array.from(matriz.childNodes).map((col)=>
-                col.nodeType == 3 ? false : Array.from(col.childNodes).map((valor)=>parseInt(valor.value)))).filter(Boolean))
+            col.nodeType == 3 ? false : Array.from(col.childNodes).map((valor)=>parseInt(valor.value)))).filter(Boolean))
 
 
             // matrices.forEach((matriz,index)=>{
@@ -104,7 +133,8 @@
                         "Content-Type":"Application/JSON",
                     }
                 }
-            )
+            ).then((response)=>response.json()
+            .then((res)=>graficarResultado(res.resultado)))
         }
 
         

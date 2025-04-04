@@ -18,7 +18,7 @@ app.post("/suma",(req,res)=>{
       fila.map((valor, j) => valor + matriz2[i][j])
     );
     console.log("resultado",resultado)
-    res.send(resultado)
+    res.json({"resultado":resultado})
 })
 
 const port = 4500
