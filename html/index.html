@@ -31,6 +31,9 @@
 <style>
     
     .matriz{
+        transition-delay: 20s;
+        background-color: blanchedalmond;
+        border: 2px solid gray;
             display:flex;
             flex-direction: row;
             gap:2px;
@@ -38,17 +41,19 @@
         .matriz>div{
             display:flex;
             flex-direction: column;
-            background-color:red
         }
         .matriz>div>input{
             min-width: 1rem;
             max-width: 2rem;
+            background-color: whitesmoke;
+            border: 1px solid slategrey;
+            display:flex;
+            justify-content: center;
         }
         .matrices{
             margin-top: 20rem;
             display:flex;
             justify-content: space-around;
-            
         }
 </style>
     <script>
@@ -73,6 +78,7 @@
             })
         })
         }
+        
          const graficarResultado = (matriz) =>{
             const resultado = document.querySelector("#resultado")                        
             resultado.innerHTML = ""
@@ -123,16 +129,16 @@
 
             // console.log(columnas)
             // console.log(filas)
-            fetch("http://localhost:4500/suma",
-                {
-                    method:"POST",
-                    mode:"cors",
-                    credentials:"include",
-                    body:JSON.stringify({"matriz1":matricesArray[0],"matriz2":matricesArray[1]}),
-                    headers:{
-                        "Content-Type":"Application/JSON",
-                    }
-                }
+            fetch('/suma', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    matrix1: matricesArray[0],
+                    matrix2: matricesArray[1]
+                }),
+            }
             ).then((response)=>response.json()
             .then((res)=>graficarResultado(res.resultado)))
         }
